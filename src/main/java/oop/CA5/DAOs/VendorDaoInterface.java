@@ -19,16 +19,16 @@ package oop.CA5.DAOs;
  * can be replaced by mock DAO objects.
  */
 
-import oop.CA5.DTOs.User;
+import oop.CA5.DTOs.Vendor;
 import oop.CA5.Exceptions.DaoException;
 
 import java.util.List;
 
-public interface UserDaoInterface
+public interface VendorDaoInterface
 {
-    public List<User> findAllUsers() throws DaoException;
+    public List<Vendor> getAllVendors() throws DaoException;
 
-    public User findUserByUsernamePassword(String username, String password) throws DaoException;
+    public Vendor getVendorById(int vendorId) throws DaoException;
 
 }
 
