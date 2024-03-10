@@ -1,4 +1,4 @@
-package com.dkit.oop.sd2;
+package oop.CA5;
 
 import static org.junit.Assert.assertTrue;
 

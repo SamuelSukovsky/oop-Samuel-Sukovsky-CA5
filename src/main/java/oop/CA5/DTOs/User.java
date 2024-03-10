@@ -1,4 +1,4 @@
-package com.dkit.oop.sd2.DTOs;
+package oop.CA5.DTOs;
 
 /**                                                     OOP Feb 2022
  *  Data Transfer Object (DTO)

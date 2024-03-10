@@ -1,4 +1,4 @@
-package com.dkit.oop.sd2.Exceptions;
+package oop.CA5.Exceptions;
 
 /**     Feb 2022
  * A 'homemade' Exception to report exceptions

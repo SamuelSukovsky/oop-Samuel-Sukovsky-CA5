@@ -1,4 +1,4 @@
-package com.dkit.oop.sd2.DAOs;
+package oop.CA5.DAOs;
 
 /** OOP Feb 2024
  *
@@ -18,8 +18,9 @@ package com.dkit.oop.sd2.DAOs;
  * in the DAO layer.
  */
 
-import com.dkit.oop.sd2.DTOs.User;
-import com.dkit.oop.sd2.Exceptions.DaoException;
+import oop.CA5.DTOs.User;
+import oop.CA5.Exceptions.DaoException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

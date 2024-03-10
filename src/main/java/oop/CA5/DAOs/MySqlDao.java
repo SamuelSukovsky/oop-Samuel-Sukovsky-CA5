@@ -1,4 +1,4 @@
-package com.dkit.oop.sd2.DAOs;
+package oop.CA5.DAOs;
 /** MySqlDao -
  * - implements functionality that is common to all MySQL DAOs
  * - i.e. getConection() and freeConnection()
@@ -11,7 +11,7 @@ package com.dkit.oop.sd2.DAOs;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import com.dkit.oop.sd2.Exceptions.DaoException;
+import oop.CA5.Exceptions.DaoException;
 
 public class MySqlDao
 {
