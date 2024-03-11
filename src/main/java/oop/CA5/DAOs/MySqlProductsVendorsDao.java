@@ -122,4 +122,82 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         return vendorList;
     }
+
+    @Override
+    public void deleteByProductID(int productId) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "DELETE FROM PRODUCTSVENDORS WHERE ProductID = ?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, productId);
+            preparedStatement.executeQuery();
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("deleteByProductID() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if (connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void deleteByVendorID(int vendorId) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "DELETE FROM PRODUCTSVENDORS WHERE VendorID = ?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, vendorId);
+            preparedStatement.executeQuery();
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("deleteByVendorID() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if (connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+            }
+        }
+    }
 }
