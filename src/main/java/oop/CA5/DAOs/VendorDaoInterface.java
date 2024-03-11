@@ -30,5 +30,7 @@ public interface VendorDaoInterface
 
     public Vendor getVendorById(int vendorId) throws DaoException;
 
+    public void deleteVendor(int vendorId) throws DaoException;
+
 }
 
