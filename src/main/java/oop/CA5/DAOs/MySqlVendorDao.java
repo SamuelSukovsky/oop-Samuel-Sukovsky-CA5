@@ -165,7 +165,7 @@ public class MySqlVendorDao extends MySqlDao implements VendorDaoInterface
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, vendorId);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {

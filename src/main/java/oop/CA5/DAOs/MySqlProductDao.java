@@ -147,7 +147,7 @@ public class MySqlProductDao extends MySqlDao implements ProductDaoInterface
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, productId);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {

@@ -28,7 +28,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         try
         {
             connection = this.getConnection();
-            String query = "SELECT ProductID, ProductName FROM PRODUCTS JOIN PRODUCTSVENDORS USING ProductID WHERE VendorID = ?";
+            String query = "SELECT ProductID, ProductName FROM PRODUCTS JOIN PRODUCTSVENDORS USING(ProductID) WHERE VendorID = ?";
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1,vendorId);
@@ -81,7 +81,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         try
         {
             connection = this.getConnection();
-            String query = "SELECT VendorID, VendorName FROM VENDORS JOIN PRODUCTSVENDORS USING VendorID WHERE ProductID = ?";
+            String query = "SELECT VendorID, VendorName FROM VENDORS LEFT JOIN PRODUCTSVENDORS USING(VendorID) WHERE ProductID = ?";
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, productId);
@@ -136,7 +136,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, productId);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {
@@ -175,7 +175,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, vendorId);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {
