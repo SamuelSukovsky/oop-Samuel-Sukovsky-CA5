@@ -31,6 +31,8 @@ public interface ProductDaoInterface
 
     public Product getProductById(int productId) throws DaoException;
 
+    public Product getProductByName(String productName) throws DaoException;
+
     public void deleteProduct(int productId) throws DaoException;
 
 }
