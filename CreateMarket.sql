@@ -1,3 +1,4 @@
+-- Main author: Samuel Sukovský
 DROP DATABASE IF EXISTS `market`;
 CREATE DATABASE `market`;
 USE `market`;
@@ -29,6 +30,7 @@ ALTER TABLE ProductsVendors ADD CONSTRAINT ProductsVendors_Products FOREIGN KEY 
 ALTER TABLE ProductsVendors ADD CONSTRAINT ProductsVendors_Vendors FOREIGN KEY ProductsVendors_Vendors (VendorID)
     REFERENCES Vendors (VendorID);
 
+-- Main author: Aleksandra Kail
 INSERT INTO Products VALUES(1,"Gold Ring");
 INSERT INTO Products VALUES(2,"Silver Ring");
 INSERT INTO Products VALUES(3,"Necklace");
