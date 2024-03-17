@@ -102,21 +102,41 @@ public class App
             }
             */
 
+
             System.out.println("\nCall: getVendorByName()");
             String name = "Kane's Jewellery";
             Vendor vendor = IVendorDao.getVendorByName(name);
 
-            if( vendor != null )
+            if(vendor != null)
                 System.out.println("Vendor name: " + name + " was found: " + vendor);
             else
                 System.out.println("Vendor name: " + name + " is not valid.");
 
+            System.out.println("\nCall: getProductByName()");
             name = "Necklace";
             Product product = IProductDao.getProductByName(name);
             if(product != null)
                 System.out.println("Product name: " + name + " was found: " + product);
             else
                 System.out.println("Product name: " + name + " is not valid.");
+
+
+            System.out.println("\nCall: getCheapestProductSoldByVendor()");
+            int id = 1;
+            product = IProductsVendorsDao.getCheapestProductSoldByVendor(id);
+
+            if(product != null)
+                System.out.println("Cheapest product sold by vendor: " + id + " was found: " + product);
+            else
+                System.out.println("No products sold by vendor: " + id + ".");
+
+            System.out.println("\nCall: getVendorSellingProductForCheapest()");
+            id = 1;
+            vendor = IProductsVendorsDao.getVendorSellingProductForCheapest(id);
+            if(vendor != null)
+                System.out.println("Vendor selling product: " + id + " for cheapest was found: " + vendor);
+            else
+                System.out.println("No vendors selling product: " + id + ".");
 
         }
         catch( DaoException e )

@@ -70,6 +70,11 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         return productList;
     }
 
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+
     @Override
     public List<Vendor> getVendorsSellingProductId(int productId) throws DaoException
     {
@@ -123,6 +128,125 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         return vendorList;
     }
 
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+    @Override
+    public Product getCheapestProductSoldByVendor(int vendorId) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Product product = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "SELECT ProductID, ProductName FROM PRODUCTS JOIN PRODUCTSVENDORS USING(ProductID) WHERE VendorID = ? ORDER BY Price ASC";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, vendorId);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next())
+            {
+                int productId = resultSet.getInt("ProductID");
+                String productName = resultSet.getString("ProductName");
+
+                product = new Product(productId, productName);
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("getCheapestProductSoldByVendor() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(resultSet != null)
+                {
+                    resultSet.close();
+                }
+                if(preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getCheapestProductSoldByVendor() " + e.getMessage());
+            }
+        }
+        return product;
+    }
+
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+    @Override
+    public Vendor getVendorSellingProductForCheapest(int productId) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Vendor vendor = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "SELECT VendorID, VendorName FROM VENDORS JOIN PRODUCTSVENDORS USING(VendorID) WHERE ProductID = ? ORDER BY Price ASC";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, productId);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next())
+            {
+                int vendorId = resultSet.getInt("VendorID");
+                String vendorName = resultSet.getString("VendorName");
+
+                vendor = new Vendor(vendorId, vendorName);
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("getVendorSellingProductForCheapest() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(resultSet != null)
+                {
+                    resultSet.close();
+                }
+                if(preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getVendorSellingProductForCheapest() " + e.getMessage());
+            }
+        }
+        return vendor;
+    }
+
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+
     @Override
     public void deleteByProductID(int productId) throws DaoException
     {
@@ -161,6 +285,11 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
         }
     }
+
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
 
     @Override
     public void deleteByVendorID(int vendorId) throws DaoException
