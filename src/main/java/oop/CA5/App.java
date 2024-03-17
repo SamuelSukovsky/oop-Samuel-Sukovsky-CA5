@@ -19,7 +19,7 @@ public class App
 
         try
         {
-
+            /*
             System.out.println("\nCall getAllVendors()");
             List<Vendor> vendors = IVendorDao.getAllVendors();
 
@@ -45,7 +45,7 @@ public class App
                 System.out.println("Vendor id: " + id + " was found: " + vendor);
             else
                 System.out.println("Vendor id: " + id + " is not valid.");
-
+            */
 
             /*
             System.out.println("\nCall getAllProducts()");
@@ -101,6 +101,23 @@ public class App
                     System.out.println("Product: " + product.toString());
             }
             */
+
+            System.out.println("\nCall: getVendorByName()");
+            String name = "Kane's Jewellery";
+            Vendor vendor = IVendorDao.getVendorByName(name);
+
+            if( vendor != null )
+                System.out.println("Vendor name: " + name + " was found: " + vendor);
+            else
+                System.out.println("Vendor name: " + name + " is not valid.");
+
+            name = "Necklace";
+            Product product = IProductDao.getProductByName(name);
+            if(product != null)
+                System.out.println("Product name: " + name + " was found: " + product);
+            else
+                System.out.println("Product name: " + name + " is not valid.");
+
         }
         catch( DaoException e )
         {
