@@ -1,23 +1,5 @@
 package oop.CA5.DAOs;
 
-/** OOP Feb 2024
- *
- * Data Access Object (DAO) for User table with MySQL-specific code
- * This 'concrete' class implements the 'UserDaoInterface'.
- *
- * The DAO will contain the SQL query code to interact with the database,
- * so, the code here is specific to a MySql database.
- * No SQL queries will be used in the Business logic layer of code, thus, it
- * will be independent of the database specifics. Changes to code related to
- * the database are all contained withing the DAO code base.
- *
- *
- * The Business Logic layer is only permitted to access the database by calling
- * methods provided in the Data Access Layer - i.e. by calling the DAO methods.
- * In this way, the Business Logic layer is seperated from the database specific code
- * in the DAO layer.
- */
-
 import oop.CA5.DTOs.Vendor;
 import oop.CA5.Exceptions.DaoException;
 
@@ -245,6 +227,57 @@ public class MySqlVendorDao extends MySqlDao implements VendorDaoInterface
             catch (SQLException e)
             {
                 throw new DaoException("deleteVendor() " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Main author: Aleksandra Kail
+     *
+     */
+    @Override
+    public void updateVendorById(int id, Vendor updatedVendor) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = this.getConnection();
+
+            String query = "UPDATE Vendors SET VendorName = ? WHERE VendorID = ?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1,updatedVendor.getName());
+            preparedStatement.setInt(2,id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if(rowsAffected == 0)
+            {
+                throw new DaoException("No Vendor found with ID: " + id);
+            }
+        }
+        catch(SQLException e)
+        {
+            throw new DaoException("updateVendorById() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("updateVendorById() " + e.getMessage());
             }
         }
     }
