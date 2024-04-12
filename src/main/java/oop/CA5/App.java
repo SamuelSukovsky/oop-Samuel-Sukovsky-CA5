@@ -16,13 +16,15 @@ public class App
         ProductDaoInterface IProductDao = new MySqlProductDao();
         VendorDaoInterface IVendorDao = new MySqlVendorDao();
         ProductsVendorsDaoInterface IProductsVendorsDao = new MySqlProductsVendorsDao();
+        JsonConverter jsonConverter = new JsonConverter();
 
         try
         {
-            /*
+
             System.out.println("\nCall getAllVendors()");
             List<Vendor> vendors = IVendorDao.getAllVendors();
 
+            /*
             if( vendors.isEmpty() )
                 System.out.println("There are no Vendors");
             else {
@@ -47,10 +49,11 @@ public class App
                 System.out.println("Vendor id: " + id + " is not valid.");
             */
 
-            /*
+
             System.out.println("\nCall getAllProducts()");
             List<Product> products = IProductDao.getAllProducts();     // call a method in the DAO
 
+            /*
             if( products.isEmpty() )
                 System.out.println("There are no Products");
             else {
@@ -102,7 +105,7 @@ public class App
             }
             */
 
-
+            /*
             System.out.println("\nCall: getVendorByName()");
             String name = "Kane's Jewellery";
             Vendor vendor = IVendorDao.getVendorByName(name);
@@ -137,7 +140,25 @@ public class App
                 System.out.println("Vendor selling product: " + id + " for cheapest was found: " + vendor);
             else
                 System.out.println("No vendors selling product: " + id + ".");
+            */
 
+            /*
+            System.out.println("\nCall: convertProductListToJsonString()");
+            String jsonString = jsonConverter.convertProductListToJsonString(products);
+            System.out.println(jsonString);
+
+            System.out.println("\nCall: convertVendorListToJsonString()");
+            jsonString = jsonConverter.convertVendorListToJsonString(vendors);
+            System.out.println(jsonString);
+            */
+
+            System.out.println("\nCall: ConvertProductToJsonString()");
+            String jsonString = jsonConverter.ConvertProductToJsonString(IProductDao.getProductById(1));
+            System.out.println(jsonString);
+
+            System.out.println("\nCall: ConvertVendorToJsonString()");
+            jsonString = jsonConverter.ConvertVendorToJsonString(IVendorDao.getVendorById(1));
+            System.out.println(jsonString);
         }
         catch( DaoException e )
         {
