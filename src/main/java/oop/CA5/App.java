@@ -1,7 +1,5 @@
 package oop.CA5;
 
-
-
 import oop.CA5.DAOs.*;
 import oop.CA5.DTOs.Product;
 import oop.CA5.DTOs.Vendor;

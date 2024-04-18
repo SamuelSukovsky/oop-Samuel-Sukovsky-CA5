@@ -236,6 +236,45 @@ public class MySqlVendorDao extends MySqlDao implements VendorDaoInterface
      *
      */
     @Override
+    public void insertVendor(Vendor vendor) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "INSERT INTO vendors (VendorID, VendorName) VALUES (?, ?)";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1,vendor.getId());
+            preparedStatement.setString(2, vendor.getName());
+
+            preparedStatement.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            throw new DaoException("insertVendor() " + e.getMessage());
+        }
+        finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    freeConnection(connection);
+                }
+            } catch (SQLException e) {
+                throw new DaoException("insertVendor() " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Main author: Aleksandra Kail
+     *
+     */
+    @Override
     public void updateVendorById(int id, Vendor updatedVendor) throws DaoException
     {
         Connection connection = null;

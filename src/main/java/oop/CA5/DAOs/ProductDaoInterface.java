@@ -35,7 +35,7 @@ public interface ProductDaoInterface
 
     public void deleteProduct(int productId) throws DaoException;
 
-    public void insertProducts() throws DaoException;
+    public void insertProducts(Product product) throws DaoException;
 
     public void updateProductById(int id, Product updatedProduct) throws DaoException;
 }

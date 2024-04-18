@@ -33,10 +33,12 @@ public interface ProductsVendorsDaoInterface
 
     public Product getCheapestProductSoldByVendor(int vendorId) throws DaoException;
     public Vendor getVendorSellingProductForCheapest(int productId) throws DaoException;
+
     public void deleteByProductID(int productId) throws DaoException;
 
     public void deleteByVendorID(int vendorId) throws DaoException;
 
     public void updateProductsVendorsById(int pId, int vId, double price, int quantity) throws DaoException;
-}
 
+    public void insertOffer(Product p, Vendor v, double price, int quantity) throws DaoException;
+}

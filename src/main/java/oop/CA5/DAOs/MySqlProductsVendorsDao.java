@@ -334,7 +334,6 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
      * Main author: Aleksandra Kail
      *
      */
-
     @Override
     public void updateProductsVendorsById(int pId, int vId, double price, int quantity) throws DaoException
     {
@@ -357,6 +356,52 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             if (rowsAffected == 0) {
                 throw new DaoException("No matching record found for product ID " + pId + " and vendor ID: " + vId);
             }
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("updateProductsVendors() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("updateProductsVendors() " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Main author: Aleksandra Kail
+     *
+     */
+    public void insertOffer(Product p, Vendor v, double price, int quantity) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "INSERT INTO productsvendors (ProductID, VendorID, Price, Quantity) VALUES (?,?,?,?)";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, p.getId());
+            preparedStatement.setInt(2, v.getId());
+            preparedStatement.setDouble(3, price);
+            preparedStatement.setInt(4, quantity);
+
+            preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {
