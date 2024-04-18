@@ -1,9 +1,8 @@
 package oop.CA5;
 
 import com.google.gson.Gson;
-import oop.CA5.DTOs.Product;
-
 import java.util.List;
+
 public class JsonConverter
 {
     private Gson gson;
@@ -31,5 +30,15 @@ public class JsonConverter
     public <Vendor> String ConvertVendorToJsonString(Vendor vendor)
     {
         return gson.toJson(vendor);
+    }
+
+    public <Offer> String convertOfferListToJsonString(List<Offer> offerList)
+    {
+        return gson.toJson(offerList);
+    }
+
+    public <Offer> String ConvertOfferToJsonString(Offer offer)
+    {
+        return gson.toJson(offer);
     }
 }
