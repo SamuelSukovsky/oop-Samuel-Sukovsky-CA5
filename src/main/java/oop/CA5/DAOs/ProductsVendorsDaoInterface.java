@@ -19,6 +19,7 @@ package oop.CA5.DAOs;
  * can be replaced by mock DAO objects.
  */
 
+import oop.CA5.DTOs.Offer;
 import oop.CA5.DTOs.Product;
 import oop.CA5.DTOs.Vendor;
 import oop.CA5.Exceptions.DaoException;
@@ -31,7 +32,12 @@ public interface ProductsVendorsDaoInterface
 
     public List<Vendor> getVendorsSellingProductId(int productId) throws DaoException;
 
+    public List<Offer> getOffersByVendorId(int vendorId) throws DaoException;
+
+    public List<Offer> getOffersByProductId(int productId) throws DaoException;
+
     public Product getCheapestProductSoldByVendor(int vendorId) throws DaoException;
+
     public Vendor getVendorSellingProductForCheapest(int productId) throws DaoException;
 
     public void deleteByProductID(int productId) throws DaoException;

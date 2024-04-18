@@ -156,8 +156,12 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         socketWriter.println(jsonString);
                         break;
                     case "5":
+                        jsonString = jsonConverter.convertProductListToJsonString(IProductDao.getAllProducts());
+                        socketWriter.println(jsonString);
                         break;
                     case "6":
+                        jsonString = jsonConverter.convertVendorListToJsonString(IVendorDao.getAllVendors());
+                        socketWriter.println(jsonString);
                         break;
                     case "7":
                         break;

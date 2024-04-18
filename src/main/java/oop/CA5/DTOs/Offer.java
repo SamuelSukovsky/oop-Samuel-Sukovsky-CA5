@@ -4,20 +4,20 @@ public class Offer
 {
     private int productId;
     private int vendorId;
-    private String name;
-    private int price;
+    private String productName;
+    private double price;
     private int quantity;
 
-    public Offer(int productId,  int vendorId, String name, int price, int quantity)
+    public Offer(int productId,  int vendorId, String productName, double price, int quantity)
     {
         this.productId = productId;
         this.vendorId = vendorId;
-        this.name = name;
+        this.productName = productName;
         this.price = price;
         this.quantity = quantity;
     }
 
-    public Offer(int productId,  int vendorId, int price, int quantity)
+    public Offer(int productId,  int vendorId, double price, int quantity)
     {
         this.productId = productId;
         this.vendorId = vendorId;
@@ -45,12 +45,12 @@ public class Offer
         return vendorId;
     }
 
-    public String getName()
+    public String getProductName()
     {
-        return name;
+        return productName;
     }
 
-    public int getPrice()
+    public double getPrice()
     {
         return price;
     }
@@ -70,12 +70,12 @@ public class Offer
         this.vendorId = vendorId;
     }
 
-    public void setName(String name)
+    public void setProductName(String productName)
     {
-        this.name = name;
+        this.productName = productName;
     }
 
-    public void setPrice(int price)
+    public void setPrice(double price)
     {
         this.price = price;
     }
@@ -85,7 +85,7 @@ public class Offer
         this.quantity = quantity;
     }
 
-    public int purchase(int quantity)
+    public double purchase(int quantity)
     {
         this.quantity -= quantity;
         return this.price * quantity;
