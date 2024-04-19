@@ -128,6 +128,66 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         return vendorList;
     }
+
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+    @Override
+    public List<Offer> getAllOffers() throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Offer> offerList = new ArrayList<>();
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "SELECT ProductID, VendorID, ProductName, Price, Quantity FROM PRODUCTS JOIN PRODUCTSVENDORS USING(ProductID)";
+            preparedStatement = connection.prepareStatement(query);
+
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next())
+            {
+                int productId = resultSet.getInt("ProductID");
+                int vendorId = resultSet.getInt("VendorID");
+                String productName = resultSet.getString("ProductName");
+                double price = resultSet.getDouble("Price");
+                int quantity = resultSet.getInt("Quantity");
+                Offer o = new Offer(productId, vendorId, productName, price, quantity);
+                offerList.add(o);
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("getOffersByVendorId() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(resultSet != null)
+                {
+                    resultSet.close();
+                }
+                if(preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getProductsSoldByVendorId() " + e.getMessage());
+            }
+        }
+        return offerList;
+    }
+
     /**
      * Main author: Samuel Sukovský
      *

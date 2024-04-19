@@ -151,11 +151,11 @@ public class App
             */
 
             System.out.println("\nCall: ConvertProductToJsonString()");
-            String jsonString = jsonConverter.ConvertProductToJsonString(IProductDao.getProductById(1));
+            String jsonString = jsonConverter.ConvertObjectToJsonString(IProductDao.getProductById(1));
             System.out.println(jsonString);
 
             System.out.println("\nCall: ConvertVendorToJsonString()");
-            jsonString = jsonConverter.ConvertVendorToJsonString(IVendorDao.getVendorById(1));
+            jsonString = jsonConverter.ConvertObjectToJsonString(IVendorDao.getVendorById(1));
             System.out.println(jsonString);
         }
         catch( DaoException e )

@@ -94,6 +94,6 @@ public class Offer
     @Override
     public String toString()
     {
-        return "Offer {" + "productId = " + productId + ", vendorId = " + vendorId + ", name = '" + productName + ", price = " + price + ", quantity = " + quantity + '\'' + '}';
+        return "Offer {" + "productId = " + productId + ", vendorId = " + vendorId + ", productName = '" + productName + ", price = " + price + ", quantity = " + quantity + '\'' + '}';
     }
 }

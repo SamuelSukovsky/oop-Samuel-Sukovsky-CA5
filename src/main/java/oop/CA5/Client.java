@@ -1,10 +1,14 @@
 package oop.CA5;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import com.google.gson.reflect.TypeToken;
+import oop.CA5.DTOs.*;
 
 public class Client
 {
@@ -30,6 +34,7 @@ public class Client
             Scanner console = new Scanner(System.in);
             String userRequest = "";
             String response;
+            JsonConverter jsonConverter = new JsonConverter();
 
             while (userRequest != "11")
             {
@@ -45,7 +50,7 @@ public class Client
                 System.out.println("10.Get Images List");
                 System.out.println("11. Exit");
                 System.out.println();
-                System.out.println("Please enter a command: ");
+                System.out.print("Please enter a command: ");
 
                 userRequest = console.nextLine();
                 out.println(userRequest);
@@ -59,7 +64,8 @@ public class Client
                         //Send ID to the server
                         out.println(id);
                         response = in.readLine();
-                        System.out.println("Response from the server: " + response);
+                        Product product = jsonConverter.ConvertJsonStringToObject(response, Product.class);
+                        System.out.println("\nResponse from the server: \n" + product + "\n");
                         break;
                     }
                     case "2":
@@ -68,7 +74,8 @@ public class Client
                         String id = console.next();
                         out.println(id);
                         response = in.readLine();
-                        System.out.println("Response from the server: " + response);
+                        Vendor vendor = jsonConverter.ConvertJsonStringToObject(response, Vendor.class);
+                        System.out.println("\nResponse from the server: \n" + vendor + "\n");
                         break;
                     }
                     case "3":
@@ -77,7 +84,9 @@ public class Client
                         String id = console.next();
                         out.println(id);
                         response = in.readLine();
-                        System.out.println("Response from the server: " + response);
+                        List<Vendor> vendorList = jsonConverter.convertJsonStringToList(response, Vendor.class);
+                        System.out.println("\nResponse from the server:");
+                        displayList(vendorList);
                         break;
                     }
                     case "4":
@@ -86,20 +95,28 @@ public class Client
                         String id = console.next();
                         out.println(id);
                         response = in.readLine();
-                        System.out.println("Response from the server: " + response);
+                        List<Product> productList = jsonConverter.convertJsonStringToList(response, Product.class);
+                        System.out.println("\nResponse from the server:");
+                        displayList(productList);
                         break;
                     }
                     case "5":
                         response = in.readLine();
-                        System.out.println("Products: " + response);
+                        List<Product> productList = jsonConverter.convertJsonStringToList(response, Product.class);
+                        System.out.println("\nResponse from the server:");
+                        displayList(productList);
                         break;
                     case "6":
                         response = in.readLine();
-                        System.out.println("Vendors: " + response);
+                        List<Vendor> vendorList = jsonConverter.convertJsonStringToList(response, Vendor.class);
+                        System.out.println("\nResponse from the server:");
+                        displayList(vendorList);
                         break;
                     case "7":
                         response = in.readLine();
-                        System.out.println("Offers: " + response);
+                        List<Offer> offerList = jsonConverter.convertJsonStringToList(response, Offer.class);
+                        System.out.println("\nResponse from the server:");
+                        displayList(offerList);
                         break;
                     case "8":
 
@@ -116,12 +133,6 @@ public class Client
                         System.out.println("Invalid request or error in response");
                         break;
                 }
-                String jsonResponse = in.readLine();
-                if(jsonResponse != null)
-                {
-                    System.out.println("Received JSON data: ");
-                    System.out.println(jsonResponse);
-                }
 
                 console = new Scanner(System.in);
             }
@@ -131,5 +142,14 @@ public class Client
             System.out.println("Client message: IOException: " + e);
         }
         System.out.println("Exiting client, but server may still be running.");
+    }
+
+    private <T> void displayList(List<T> list)
+    {
+        for (T object : list)
+        {
+            System.out.println(object);
+        }
+        System.out.println();
     }
 }

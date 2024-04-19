@@ -1,6 +1,8 @@
 package oop.CA5;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.List;
 
 public class JsonConverter
@@ -12,33 +14,23 @@ public class JsonConverter
         this.gson = new Gson();
     }
 
-    public <Product> String convertProductListToJsonString(List<Product> productList)
+    public <T> String ConvertObjectToJsonString(T object)
     {
-        return gson.toJson(productList);
+        return gson.toJson(object);
     }
 
-    public <Product> String ConvertProductToJsonString(Product product)
+    public <T> String convertListToJsonString(List<T> list)
     {
-        return gson.toJson(product);
+        return gson.toJson(list);
     }
 
-    public <Vendor> String convertVendorListToJsonString(List<Vendor> vendorList)
+    public <T> T ConvertJsonStringToObject(String json, Class<T> object)
     {
-        return gson.toJson(vendorList);
+        return gson.fromJson(json, object);
     }
 
-    public <Vendor> String ConvertVendorToJsonString(Vendor vendor)
+    public <T> List<T> convertJsonStringToList(String json, Class<T> a)
     {
-        return gson.toJson(vendor);
-    }
-
-    public <Offer> String convertOfferListToJsonString(List<Offer> offerList)
-    {
-        return gson.toJson(offerList);
-    }
-
-    public <Offer> String ConvertOfferToJsonString(Offer offer)
-    {
-        return gson.toJson(offer);
+        return gson.fromJson(json, TypeToken.getParameterized(List.class, a).getType());
     }
 }
