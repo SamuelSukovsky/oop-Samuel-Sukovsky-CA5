@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 import oop.CA5.DAOs.*;
+import oop.CA5.DTOs.*;
 import oop.CA5.Exceptions.DaoException;
 
 public class Server
@@ -115,6 +117,8 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
         ProductDaoInterface IProductDao = new MySqlProductDao();
         VendorDaoInterface IVendorDao = new MySqlVendorDao();
         ProductsVendorsDaoInterface IProductsVendorsDao = new MySqlProductsVendorsDao();
+        OrderDaoInterface IOrderDao = new MySqlOrderDao();
+        OrdersProductsVendorsDaoInterface IOrdersProductsVendorsDao = new MySqlOrdersProductsVendorsDao();
         JsonConverter jsonConverter = new JsonConverter();
 
         int id;
@@ -166,10 +170,42 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         socketWriter.println(jsonString);
                         break;
                     case "8":
+                        int pid = Integer.parseInt(socketReader.readLine());
+                        int vid = Integer.parseInt(socketReader.readLine());
+                        System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + request + ", " + pid + ", " + vid);
+                        jsonString = jsonConverter.ConvertObjectToJsonString(IProductsVendorsDao.getOfferByProductVendorIds(pid, vid));
+                        socketWriter.println(jsonString);
                         break;
                     case "9":
                         break;
                     case "10":
+                        System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + request);
+                        String input = socketReader.readLine();
+                        Order order = jsonConverter.ConvertJsonStringToObject(input, Order.class);
+                        if (order.getOrderId() == -1)
+                        {
+                            order.setOrderId(IOrderDao.getMaxOrderId() + 1);
+                        }
+                        jsonString = null;
+                        try
+                        {
+                            IOrderDao.insertOrder(order.getOrderId());
+                            for (Offer item : order.getItems())
+                            {
+                                IOrdersProductsVendorsDao.insertOrderItem(order.getOrderId(), item);
+                                Offer stock = IProductsVendorsDao.getOfferByProductVendorIds(item.getProductId(), item.getVendorId());
+                                IProductsVendorsDao.updateProductsVendorsById(item.getProductId(), item.getVendorId(), item.getPrice(), stock.getQuantity() - item.getQuantity());
+                            }
+                            jsonString = "Order placed successfully";
+                        }
+                        catch (Exception e)
+                        {
+                            jsonString = e.toString();
+                        }
+                        finally
+                        {
+                            socketWriter.println(jsonString);
+                        }
                         break;
                     case "11":
                         break;

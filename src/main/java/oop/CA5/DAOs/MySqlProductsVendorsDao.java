@@ -161,7 +161,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         catch (SQLException e)
         {
-            throw new DaoException("getOffersByVendorId() " + e.getMessage());
+            throw new DaoException("getAllOffers() " + e.getMessage());
         }
         finally
         {
@@ -182,7 +182,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("getProductsSoldByVendorId() " + e.getMessage());
+                throw new DaoException("getAllOffers() " + e.getMessage());
             }
         }
         return offerList;
@@ -241,7 +241,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("getProductsSoldByVendorId() " + e.getMessage());
+                throw new DaoException("getOffersByVendorId() " + e.getMessage());
             }
         }
         return offerList;
@@ -280,7 +280,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         catch (SQLException e)
         {
-            throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+            throw new DaoException("getOffersByProductId() " + e.getMessage());
         }
         finally
         {
@@ -301,10 +301,69 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+                throw new DaoException("getOffersByProductId() " + e.getMessage());
             }
         }
         return offerList;
+    }
+
+    /**
+     * Main author: Samuel Sukovský
+     *
+     */
+
+    @Override
+    public Offer getOfferByProductVendorIds(int productId, int vendorId) throws DaoException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Offer offer = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "SELECT ProductID, VendorID, ProductName, Price, Quantity FROM PRODUCTS JOIN PRODUCTSVENDORS USING(ProductID) WHERE ProductID = ? AND VendorID = ?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, productId);
+            preparedStatement.setInt(2, vendorId);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next())
+            {
+                String productName = resultSet.getString("ProductName");
+                double price = resultSet.getDouble("Price");
+                int quantity = resultSet.getInt("Quantity");
+                offer = new Offer(productId, vendorId, productName, price, quantity);
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("getOfferByProductVendorIds() " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(resultSet != null)
+                {
+                    resultSet.close();
+                }
+                if (preparedStatement != null)
+                {
+                    preparedStatement.close();
+                }
+                if (connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DaoException("getOfferByProductVendorIds() " + e.getMessage());
+            }
+        }
+        return offer;
     }
 
     /**
@@ -460,7 +519,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+                throw new DaoException("deleteByProductID() " + e.getMessage());
             }
         }
     }
@@ -504,7 +563,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("getVendorsSellingProductId() " + e.getMessage());
+                throw new DaoException("deleteByVendorID() " + e.getMessage());
             }
         }
     }
@@ -538,7 +597,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         catch (SQLException e)
         {
-            throw new DaoException("updateProductsVendors() " + e.getMessage());
+            throw new DaoException("updateProductsVendorsById() " + e.getMessage());
         }
         finally
         {
@@ -555,7 +614,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("updateProductsVendors() " + e.getMessage());
+                throw new DaoException("updateProductsVendorsById() " + e.getMessage());
             }
         }
     }
@@ -584,7 +643,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
         }
         catch (SQLException e)
         {
-            throw new DaoException("updateProductsVendors() " + e.getMessage());
+            throw new DaoException("insertOffer() " + e.getMessage());
         }
         finally
         {
@@ -601,7 +660,7 @@ public class MySqlProductsVendorsDao extends MySqlDao implements ProductsVendors
             }
             catch (SQLException e)
             {
-                throw new DaoException("updateProductsVendors() " + e.getMessage());
+                throw new DaoException("insertOffer() " + e.getMessage());
             }
         }
     }

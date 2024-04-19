@@ -32,11 +32,13 @@ public class Client
             System.out.println("Client message: The Client is running and has connected to the server");
 
             Scanner console = new Scanner(System.in);
+            boolean running = true;
             String userRequest = "";
             String response;
             JsonConverter jsonConverter = new JsonConverter();
+            Order order = new Order();
 
-            while (userRequest != "11")
+            while (running)
             {
                 System.out.println("1. Display Product by ID");
                 System.out.println("2. Display Vendor by ID");
@@ -47,8 +49,9 @@ public class Client
                 System.out.println("7. Display all Offers");
                 System.out.println("8. Add Product to an order");
                 System.out.println("9. DeleteProduct from the order");
-                System.out.println("10.Get Images List");
-                System.out.println("11. Exit");
+                System.out.println("10. Place order");
+                System.out.println("11.Get Images List");
+                System.out.println("12. Exit");
                 System.out.println();
                 System.out.print("Please enter a command: ");
 
@@ -119,18 +122,48 @@ public class Client
                         displayList(offerList);
                         break;
                     case "8":
-
+                        System.out.print("Enter Product ID: ");
+                        String id = console.next();
+                        //Send Product ID to the server
+                        out.println(id);
+                        System.out.print("Enter Vendor ID: ");
+                        id = console.next();
+                        //Send Vendor ID to the server
+                        out.println(id);
+                        response = in.readLine();
+                        Offer offer = jsonConverter.ConvertJsonStringToObject(response, Offer.class);
+                        if (offer != null)
+                        {
+                            System.out.print("Enter quantity: ");
+                            int quantity = console.nextInt();
+                            if (quantity <= offer.getQuantity())
+                            {
+                                order.addItem(offer, quantity);
+                                order.printItems();
+                            }
+                            else
+                            {
+                                System.out.println("Invalid quantity");
+                            }
+                        }
+                        System.out.println("\nResponse from the server: \n" + offer + "\n");
                         break;
                     case "9":
 
                         break;
                     case "10":
-
+                        String jsonString = jsonConverter.ConvertObjectToJsonString(order);
+                        out.println(jsonString);
+                        response = in.readLine();
+                        System.out.println("\nResponse from the server: \n" + response + "\n");
                         break;
                     case "11":
                         break;
+                    case "12":
+                        running = false;
+                        break;
                     default:
-                        System.out.println("Invalid request or error in response");
+                        System.out.println("Invalid request or error in response\n");
                         break;
                 }
 

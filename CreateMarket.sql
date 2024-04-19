@@ -5,6 +5,8 @@ USE `market`;
 DROP TABLE IF EXISTS `Products`;
 DROP TABLE IF EXISTS `Vendors`;
 DROP TABLE IF EXISTS `ProductsVendors`;
+DROP TABLE IF EXISTS `Orders`;
+DROP TABLE IF EXISTS `OrdersProductsVendors`;
 
 CREATE TABLE Products (
     ProductID int NOT NULL,
@@ -23,12 +25,33 @@ CREATE TABLE ProductsVendors (
     Quantity int NOT NULL,
     CONSTRAINT ProductsVendors_pk PRIMARY KEY (ProductID,VendorID)
 );
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    CONSTRAINT Orders_pk PRIMARY KEY (OrderID)
+);
+CREATE TABLE OrdersProductsVendors (
+    OrderID int NOT NULL,
+    ProductID int NOT NULL,
+    VendorID int NOT NULL,
+    Price double(6,2) NOT NULL,
+    Quantity int NOT NULL,
+    CONSTRAINT OrdersProductsVendors_pk PRIMARY KEY (OrderID,ProductID,VendorID)
+);
 
 ALTER TABLE ProductsVendors ADD CONSTRAINT ProductsVendors_Products FOREIGN KEY ProductsVendors_Products (ProductID)
     REFERENCES Products (ProductID);
 
 ALTER TABLE ProductsVendors ADD CONSTRAINT ProductsVendors_Vendors FOREIGN KEY ProductsVendors_Vendors (VendorID)
     REFERENCES Vendors (VendorID);
+
+ALTER TABLE OrdersProductsVendors ADD CONSTRAINT OrdersProductsVendors_Orders FOREIGN KEY OrdersProductsVendors_Orders (OrderID)
+    REFERENCES Orders (OrderID);
+
+ALTER TABLE OrdersProductsVendors ADD CONSTRAINT OrdersProductsVendors_ProductsVendors FOREIGN KEY OrdersProductsVendors_ProductsVendors (ProductID)
+    REFERENCES ProductsVendors (ProductID);
+
+ALTER TABLE OrdersProductsVendors ADD CONSTRAINT OrdersProductsVendors_ProductsVendors FOREIGN KEY OrdersProductsVendors_ProductsVendors (VendorID)
+    REFERENCES ProductsVendors (VendorID);
 
 -- Main author: Aleksandra Kail
 INSERT INTO Products VALUES(1,"Gold Ring");
