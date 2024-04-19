@@ -29,7 +29,7 @@ public class MySqlOrdersProductsVendorsDao extends MySqlDao implements OrdersPro
         try
         {
             connection = this.getConnection();
-            String query = "SELECT ProductID, VendorID, ProductName, Price, Quantity FROM ORDERSPRODUCTSVENDORS WHERE OrderID = ?";
+            String query = "SELECT ProductID, VendorID, ProductName, Price, Quantity FROM OrdersProductsVendors JOIN Products USING (ProductID) WHERE OrderID = ?";
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1,orderId);

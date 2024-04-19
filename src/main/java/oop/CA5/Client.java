@@ -50,8 +50,9 @@ public class Client
                 System.out.println("8. Add Product to an order");
                 System.out.println("9. DeleteProduct from the order");
                 System.out.println("10. Place order");
-                System.out.println("11.Get Images List");
-                System.out.println("12. Exit");
+                System.out.println("11. Cancel order");
+                System.out.println("12. Get Images List");
+                System.out.println("13. Exit");
                 System.out.println();
                 System.out.print("Please enter a command: ");
 
@@ -149,17 +150,39 @@ public class Client
                         System.out.println("\nResponse from the server: \n" + offer + "\n");
                         break;
                     case "9":
-
+                        System.out.print("Enter Item Index: ");
+                        int itemIndex = console.nextInt();
+                        try
+                        {
+                            order.removeItem(itemIndex);
+                            System.out.println("Remove item on index " + itemIndex + " from the order\n");
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Cannot remove item on index " + itemIndex + ":\n" + e + "\n");
+                        }
                         break;
                     case "10":
                         String jsonString = jsonConverter.ConvertObjectToJsonString(order);
                         out.println(jsonString);
                         response = in.readLine();
                         System.out.println("\nResponse from the server: \n" + response + "\n");
+                        if (response.equals("Order placed successfully"))
+                        {
+                            order.clearItems();
+                        }
                         break;
                     case "11":
+                        System.out.print("Enter ID: ");
+                        id = console.next();
+                        //Send ID to the server
+                        out.println(id);
+                        response = in.readLine();
+                        System.out.println("\nResponse from the server: \n" + response + "\n");
                         break;
                     case "12":
+                        break;
+                    case "13":
                         running = false;
                         break;
                     default:

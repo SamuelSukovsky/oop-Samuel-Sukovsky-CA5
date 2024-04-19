@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.List;
 
 import oop.CA5.DAOs.*;
 import oop.CA5.DTOs.*;
@@ -122,7 +123,7 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
         JsonConverter jsonConverter = new JsonConverter();
 
         int id;
-        String jsonString;
+        String jsonString = null;
         String request;
         try
         {
@@ -176,8 +177,6 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         jsonString = jsonConverter.ConvertObjectToJsonString(IProductsVendorsDao.getOfferByProductVendorIds(pid, vid));
                         socketWriter.println(jsonString);
                         break;
-                    case "9":
-                        break;
                     case "10":
                         System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + request);
                         String input = socketReader.readLine();
@@ -186,7 +185,6 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         {
                             order.setOrderId(IOrderDao.getMaxOrderId() + 1);
                         }
-                        jsonString = null;
                         try
                         {
                             IOrderDao.insertOrder(order.getOrderId());
@@ -194,7 +192,7 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                             {
                                 IOrdersProductsVendorsDao.insertOrderItem(order.getOrderId(), item);
                                 Offer stock = IProductsVendorsDao.getOfferByProductVendorIds(item.getProductId(), item.getVendorId());
-                                IProductsVendorsDao.updateProductsVendorsById(item.getProductId(), item.getVendorId(), item.getPrice(), stock.getQuantity() - item.getQuantity());
+                                IProductsVendorsDao.updateProductsVendorsById(item.getProductId(), item.getVendorId(), stock.getPrice(), stock.getQuantity() - item.getQuantity());
                             }
                             jsonString = "Order placed successfully";
                         }
@@ -208,6 +206,33 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         }
                         break;
                     case "11":
+                        System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + request);
+                        id = Integer.parseInt(socketReader.readLine());
+                        try
+                        {
+                            List<Offer> itemList = IOrdersProductsVendorsDao.getItemsByOrderId(id);
+                            for (Offer item : itemList)
+                            {
+                                Offer stock = IProductsVendorsDao.getOfferByProductVendorIds(item.getProductId(), item.getVendorId());
+                                IProductsVendorsDao.updateProductsVendorsById(item.getProductId(), item.getVendorId(), stock.getPrice(), stock.getQuantity() + item.getQuantity());
+                            }
+                            IOrderDao.deleteOrder(id);
+                            jsonString = "Order cancelled successfully";
+                        }
+                        catch (Exception e)
+                        {
+                            jsonString = e.toString();
+                        }
+                        finally
+                        {
+                            socketWriter.println(jsonString);
+                        }
+                        break;
+                    case "12":
+                        break;
+                    case "9":
+                    case "13":
+                        System.out.println("Server: (ClientHandler): Read command from client " + clientNumber + ": " + request + "\nInput is client side only");
                         break;
                     default:
                         socketWriter.println("Invalid option");
