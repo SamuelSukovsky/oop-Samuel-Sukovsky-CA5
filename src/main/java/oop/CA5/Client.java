@@ -12,9 +12,10 @@ import oop.CA5.DTOs.*;
 
 public class Client
 {
+    private static DataInputStream dataInputStream = null;
     /**
      * Main author: Aleksandra Kail
-     *
+     * Modified by: Samuel Sukovský
      */
     public static void main(String[] args)
     {
@@ -29,6 +30,8 @@ public class Client
             PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())))
         {
+            dataInputStream = new DataInputStream(socket.getInputStream());
+
             System.out.println("Client message: The Client is running and has connected to the server");
 
             Scanner console = new Scanner(System.in);
@@ -181,6 +184,19 @@ public class Client
                         System.out.println("\nResponse from the server: \n" + response + "\n");
                         break;
                     case "12":
+                        response = in.readLine();
+                        List<String> imageList = parseImageList(response);
+                        System.out.println("Available images: ");
+                        for (int i = 0; i < imageList.size(); i++)
+                        {
+                            System.out.println((i + 1) + ". " + imageList.get(i));
+                        }
+                        System.out.println("Select an image to download (enter number)");
+                        int imgIndex = Integer.parseInt(console.nextLine()) - 1;
+                        String selectedImage = imageList.get(imgIndex);
+
+                        out.println("Get image:" + selectedImage);
+                        receiveFile(selectedImage);
                         break;
                     case "13":
                         running = false;
@@ -197,6 +213,10 @@ public class Client
         {
             System.out.println("Client message: IOException: " + e);
         }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
         System.out.println("Exiting client, but server may still be running.");
     }
 
@@ -207,5 +227,37 @@ public class Client
             System.out.println(object);
         }
         System.out.println();
+    }
+
+    public static List<String> parseImageList(String imgListJson)
+    {
+        String[] images = imgListJson.substring(1,imgListJson.length() - 1).split(", ");
+        return List.of(images);
+    }
+
+    private static void receiveFile(String fileName) throws Exception
+    {
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+
+        long bytes_remaining = dataInputStream.readLong();
+        System.out.println("Server: file size in bytes = " + bytes_remaining);
+
+        byte[] buffer = new byte[4 * 1024];
+
+        System.out.println("Server:  Bytes remaining to be read from socket: ");
+        int bytes_read;
+
+        while (bytes_remaining > 0 &&  (bytes_read =
+                dataInputStream.read(buffer, 0,(int)Math.min(buffer.length, bytes_remaining))) != -1)
+        {
+            fileOutputStream.write(buffer, 0, bytes_read);
+
+            bytes_remaining = bytes_remaining - bytes_read;
+
+            System.out.print(bytes_remaining + ", ");
+        }
+
+        System.out.println("File is Received");
+        fileOutputStream.close();
     }
 }

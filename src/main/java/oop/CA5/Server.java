@@ -1,23 +1,21 @@
 package oop.CA5;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.util.List;
 
 import oop.CA5.DAOs.*;
 import oop.CA5.DTOs.*;
 import oop.CA5.Exceptions.DaoException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Server
 {
     /**
      * Main author: Aleksandra Kail
-     *
+     * Modified by: Samuel Sukovský
      */
     final int PORT = 8888; //port number to listen for
 
@@ -94,6 +92,8 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
     PrintWriter socketWriter;
     Socket clientSocket;
     final int clientNumber;
+    final String imgDirectory = "src/images";
+    private static DataOutputStream dataOutputStream = null;
 
     // Constructor
     public ClientHandler(Socket clientSocket, int clientNumber)
@@ -121,6 +121,14 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
         OrderDaoInterface IOrderDao = new MySqlOrderDao();
         OrdersProductsVendorsDaoInterface IOrdersProductsVendorsDao = new MySqlOrdersProductsVendorsDao();
         JsonConverter jsonConverter = new JsonConverter();
+        try
+        {
+            dataOutputStream = new DataOutputStream( clientSocket.getOutputStream());
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
 
         int id;
         String jsonString = null;
@@ -229,6 +237,11 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
                         }
                         break;
                     case "12":
+                        List<String> imageList = getImageList();
+                        socketWriter.println(imageList.toString());
+                        String name = socketReader.readLine();
+                        String selectedImage = name.substring(name.indexOf(":") + 1);
+                        sendFile(imgDirectory + "/" + selectedImage);
                         break;
                     case "9":
                     case "13":
@@ -244,6 +257,10 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
         {
             ex.printStackTrace();
         }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
         finally
         {
             this.socketWriter.close();
@@ -258,5 +275,42 @@ class ClientHandler implements Runnable   // each ClientHandler communicates wit
             }
         }
         System.out.println("Server: (ClientHandler): Handler for Client " + clientNumber + " is terminating .....");
+    }
+
+    public List<String> getImageList()
+    {
+        List<String> imageList = new ArrayList<>();
+        File directory = new File(this.imgDirectory);
+        File[] files = directory.listFiles();
+        if (files != null)
+        {
+            for(File file : files)
+            {
+                if(file.isFile() && file.getName().endsWith(".jpg"))
+                {
+                    imageList.add(file.getName());
+                }
+            }
+        }
+        return imageList;
+    }
+
+    private static void sendFile(String path) throws Exception
+    {
+        int bytes = 0;
+        File file = new File(path);
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        dataOutputStream.writeLong(file.length());
+
+        byte[] buffer = new byte[4 * 1024];
+
+        while ((bytes = fileInputStream.read(buffer))!= -1)
+        {
+            dataOutputStream.write(buffer, 0, bytes);
+            dataOutputStream.flush();
+        }
+
+        fileInputStream.close();
     }
 }
