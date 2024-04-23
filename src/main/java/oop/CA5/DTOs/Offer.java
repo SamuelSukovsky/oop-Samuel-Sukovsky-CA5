@@ -33,6 +33,7 @@ public class Offer
 
     public Offer()
     {
+
     }
 
     public int getProductId()
